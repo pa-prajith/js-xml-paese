@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS XML Parser</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        font-size: 20px;
+        letter-spacing: 1.3px;
+        line-height: 1.2;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .container {
+        margin: 20px;
+        padding: 10px;
+        box-shadow: 2px 2px rgb(255, 198, 0, 0.9);
+        height: 90vh;
+        width: 90%;
+        border: 0.4px solid rgba(255, 198, 0);
+      }
+      select {
+        margin: 30px 0;
+        display: block;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Houses</h1>
+      <select name="selHouses" id="sel_houses"></select>
+      <h1>Swords</h1>
+      <select name="selSwords" id="sel_swords"></select>
+    </div>
+    <script>
+      function CreateOption(obj) {
+        const option = document.createElement("option");
+        option.value = obj.id;
+        option.text = obj.textContent;
+        return option;
+      }
+
+      function CreateOptions(ele, nodes) {
+        nodes.forEach((n) => {
+          const opt = CreateOption(n);
+          ele.append(opt);
+        });
+      }
+      function ProcessData(data) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data, "application/xml");
+        const houses = xml.querySelectorAll("house");
+        const swords = xml.querySelectorAll("sword");
+        CreateOptions(selHouses, houses);
+        CreateOptions(selSwords, swords);
+      }
+
+      function Init() {
+        fetch("data.xml")
+          .then((res) => res.text())
+          .then((data) => ProcessData(data));
+      }
+
+      const selHouses = document.querySelector("#sel_houses");
+      const selSwords = document.querySelector("#sel_swords");
+      Init();
+    </script>
+  </body>
+</html>
